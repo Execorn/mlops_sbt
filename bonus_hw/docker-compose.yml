@@ -1,0 +1,24 @@
+services:
+  triton-server:
+    build: 
+      context: ./server
+    container_name: triton_server_hw
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - index_data:/models/faiss_search/1/
+
+  triton-client:
+    build: 
+      context: ./client
+    container_name: triton_client_hw
+    depends_on:
+      - triton-server
+    volumes:
+      - index_data:/shared_data
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  index_data:
